@@ -1,0 +1,22 @@
+{
+  "filter_by" : [
+    {
+      "optionName" : "bla bla",
+      "subOptions" : [
+
+      ]
+    }, {
+
+    }
+  ],
+  "filter_on" : [
+    {
+      "optionName" : "bla bla",
+      "subOptions" : [
+
+      ]
+    }, {
+
+    }
+  ]
+}
