@@ -31,4 +31,7 @@
     <string name="app_filter_by_key">filter_by_key</string>
     <string name="app_filter_on_key">filter_on_key</string>
 
+
+    <string name="app_filter_search_hint">Search Book, Writer, Anything\.\.\.</string>
+
 </resources>

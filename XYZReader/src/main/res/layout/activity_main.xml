@@ -26,13 +26,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
         android:drawableLeft="@drawable/ic_lens"
         android:drawablePadding="@dimen/activity_margin_component"
         android:drawableStart="@drawable/ic_lens"
+        android:focusable="true"
         android:gravity="center"
-        android:padding="@dimen/activity_margin_relative"
+        android:padding="@dimen/activity_margin_component"
         android:text="@string/app_search_text"
         android:textColor="@color/colorIcons"
+        android:textSize="@dimen/activity_text_subheader"
+        android:onClick="onMainSearch"
         app:layout_constraintBottom_toBottomOf="@+id/main_filter"
         app:layout_constraintStart_toStartOf="@+id/main_filter_expanded"
         app:layout_constraintTop_toTopOf="@+id/main_filter"
@@ -67,5 +72,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_search"
         app:layout_constraintVertical_bias="0.0"/>
+
+    <RelativeLayout
+        android:id="@+id/main_search_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:id="@+id/coating_filter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.75"
+            android:background="@color/colorBackground"/>
+
+        <EditText
+            android:id="@+id/search_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionSearch|actionDone"
+            android:fontFamily="monospace"
+            android:typeface="monospace"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:hint="@string/app_filter_search_hint"
+            android:textColor="@color/colorIcons"
+            android:textColorHint="@color/colorSecondaryText"
+            android:textStyle="bold"
+            android:inputType="text"
+            android:padding="@dimen/activity_margin_sibling"
+            android:textSize="@dimen/activity_text_subheader"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:backgroundTint="@android:color/transparent"/>
+
+        <View
+            android:id="@+id/search_edit_border"
+            android:layout_width="2dp"
+            android:layout_height="3dp"
+            android:background="@drawable/border_round"
+            android:layout_centerHorizontal="true"
+            android:layout_alignBottom="@id/search_edit"/>
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

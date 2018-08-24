@@ -19,8 +19,4 @@
         <item>@string/app_filter_option_genre_sci_fi</item>
     </string-array>
 
-    <map key="filter_by">
-
-    </map>
-
 </resources>
