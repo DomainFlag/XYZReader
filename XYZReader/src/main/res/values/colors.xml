@@ -1,5 +1,5 @@
 <resources>
-    <color name="colorPrimaryDark">#192b1b</color>
+    <color name="colorPrimaryDark">#000000</color>
     <color name="colorPrimary">#355938</color>
     <color name="colorPrimaryLight">#408e44</color>
     <color name="colorAccent">#BD2B44</color>
@@ -7,11 +7,14 @@
     <color name="colorBackground">#132C35</color>
     <color name="colorSecondaryText">#d3d3d3</color>
     <color name="colorIcons">#FFFFFF</color>
+    <color name="colorHintText">#80d3d3d3</color>
 
     <color name="photo_placeholder">#ccc</color>
 
+    <color name="colorAccentButton">#25BD2B44</color>
     <color name="theme_primary">#04561A</color>
     <color name="theme_primary_dark">#04561A</color>
     <color name="theme_accent">#04561A</color>
     <color name="ltgray">#ffe0e0e0</color>
+
 </resources>

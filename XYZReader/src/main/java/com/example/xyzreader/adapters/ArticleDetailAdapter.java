@@ -15,7 +15,7 @@ import com.example.xyzreader.R;
 import com.example.xyzreader.activities.MainActivity;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
-import com.example.xyzreader.ui.ImageLoaderHelper;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,15 +51,18 @@ public class ArticleDetailAdapter extends RecyclerView.Adapter<MainActivity.View
     @Override
     public MainActivity.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = ((Activity) mContext).getLayoutInflater().inflate(R.layout.article_layout, parent, false);
-        final MainActivity.ViewHolder vh = new MainActivity.ViewHolder(view);
-        view.setOnClickListener(new View.OnClickListener() {
+        final MainActivity.ViewHolder viewHolder = new MainActivity.ViewHolder(view);
+
+        View detailedArticle = view.findViewById(R.id.detailed_article);
+        detailedArticle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mContext.startActivity(new Intent(Intent.ACTION_VIEW,
-                        ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                        ItemsContract.Items.buildItemUri(getItemId(viewHolder.getAdapterPosition()))));
             }
         });
-        return vh;
+
+        return viewHolder;
     }
 
     private Date parsePublishedDate() {
@@ -73,13 +76,16 @@ public class ArticleDetailAdapter extends RecyclerView.Adapter<MainActivity.View
         return new Date();
     }
 
+    public void swapCursor(Cursor cursor) {
+        mCursor = cursor;
+    }
+
     @Override
     public void onBindViewHolder(MainActivity.ViewHolder holder, int position) {
         mCursor.moveToPosition(position);
         holder.titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
         Date publishedDate = parsePublishedDate();
         if (!publishedDate.before(START_OF_EPOCH.getTime())) {
-
             holder.subtitleView.setText(Html.fromHtml(
                     DateUtils.getRelativeTimeSpanString(
                             publishedDate.getTime(),
@@ -93,16 +99,16 @@ public class ArticleDetailAdapter extends RecyclerView.Adapter<MainActivity.View
                             + "<br/>" + " by "
                             + mCursor.getString(ArticleLoader.Query.AUTHOR)));
         }
-        holder.thumbnailView.setImageUrl(
-                mCursor.getString(ArticleLoader.Query.THUMB_URL),
-                ImageLoaderHelper.getInstance(mContext).getImageLoader());
 
-
-//        holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+        Picasso.get()
+                .load(mCursor.getString(ArticleLoader.Query.THUMB_URL))
+                .into(holder.thumbnailView);
     }
 
     @Override
     public int getItemCount() {
-        return mCursor.getCount();
+        if(mCursor == null)
+            return 0;
+        else return mCursor.getCount();
     }
 }

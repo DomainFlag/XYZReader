@@ -33,5 +33,6 @@
 
 
     <string name="app_filter_search_hint">Search Book, Writer, Anything\.\.\.</string>
+    <string name="app_filter_search_result">Search result</string>
 
 </resources>

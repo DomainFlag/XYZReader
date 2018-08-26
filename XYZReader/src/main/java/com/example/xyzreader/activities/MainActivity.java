@@ -10,46 +10,51 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.example.xyzreader.Constants;
 import com.example.xyzreader.R;
 import com.example.xyzreader.adapters.ArticleDetailAdapter;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.UpdaterService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * An activity representing a list of Articles. This activity has different presentations for
- * handset and tablet-size devices. On handsets, the activity presents a list of items, which when
- * touched, lead to a {@link ArticleActivity} representing item details. On tablets, the
- * activity presents a grid of items as cards.
- */
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor>, TextView.OnEditorActionListener {
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
 
+    private ArticleDetailAdapter adapter;
+
     private Map<String, ActiveFilter> activeFilters = new HashMap<>();
+
+    private SnapHelper snapHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +64,79 @@ public class MainActivity extends AppCompatActivity implements
         if(getSupportActionBar() != null)
             getSupportActionBar().hide();
 
+        adapter = new ArticleDetailAdapter(this, null);
+        adapter.setHasStableIds(true);
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        SnapHelper snapHelper = new PagerSnapHelper();
-        snapHelper.attachToRecyclerView(mRecyclerView);
+        mRecyclerView.setAdapter(adapter);
+
+        snapHelper = new PagerSnapHelper();
+        renderWindowOption(R.id.view_single_window);
+
         getLoaderManager().initLoader(0, null, this);
 
         if(savedInstanceState == null) {
             refresh();
         }
 
+        initWindowOptions();
         initFilters();
         generateFilters();
+    }
+
+    public void initWindowOptions() {
+        LinearLayout linearLayout = findViewById(R.id.view_changeling);
+
+        final ArrayList<View> children = new ArrayList<>();
+        int length = linearLayout.getChildCount();
+
+        for(int it = 0; it < length; it++) {
+            children.add(linearLayout.getChildAt(it));
+
+            linearLayout.getChildAt(it).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for(int it = 0; it < children.size(); it++) {
+                        View child = children.get(it);
+
+                        if(child.getId() != view.getId()) {
+                            child.setAlpha(0.4f);
+                        } else child.setAlpha(1.0f);
+                    }
+
+                    renderWindowOption(view.getId());
+                }
+            });
+        }
+    }
+
+    public void renderWindowOption(int identifier) {
+        switch(identifier) {
+            case R.id.view_multi_window : {
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(this,
+                        3,
+                        LinearLayoutManager.VERTICAL,
+                        false);
+
+                snapHelper.attachToRecyclerView(null);
+
+                mRecyclerView.setLayoutManager(gridLayoutManager);
+                break;
+            }
+            case R.id.view_single_window : {
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,
+                        LinearLayoutManager.VERTICAL,
+                        false);
+
+                snapHelper.attachToRecyclerView(mRecyclerView);
+
+                mRecyclerView.setLayoutManager(linearLayoutManager);
+                break;
+            }
+            default : Log.v("MainActivity", "Don't do it again");
+        }
     }
 
     private void refresh() {
@@ -114,15 +179,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        ArticleDetailAdapter adapter = new ArticleDetailAdapter(this, cursor);
-        adapter.setHasStableIds(true);
-        mRecyclerView.setAdapter(adapter);
-
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-
-        mRecyclerView.setLayoutManager(sglm);
+        adapter.swapCursor(cursor);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -131,26 +189,31 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public NetworkImageView thumbnailView;
+        public ImageView thumbnailView;
         public TextView titleView;
         public TextView subtitleView;
 
         public ViewHolder(View view) {
             super(view);
 
-            thumbnailView = (NetworkImageView) view.findViewById(R.id.thumbnail);
-            titleView = (TextView) view.findViewById(R.id.article_title);
-            subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
+            thumbnailView = view.findViewById(R.id.thumbnail);
+            titleView = view.findViewById(R.id.article_title);
+            subtitleView = view.findViewById(R.id.article_subtitle);
         }
     }
 
-    public void onMainSearch(View view) {
-        initSearch();
-    }
-
-    public void initSearch() {
-        View mainSearchContainer = findViewById(R.id.main_search_container);
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void onClickSearch(View view) {
+        final View mainSearchContainer = findViewById(R.id.main_search_container);
         mainSearchContainer.setVisibility(View.VISIBLE);
+
+        final ImageButton imageButton = findViewById(R.id.search_close);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mainSearchContainer.setVisibility(View.GONE);
+            }
+        });
 
         final EditText editText = (EditText) findViewById(R.id.search_edit);
         editText.setOnEditorActionListener(this);
@@ -167,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements
                 int len = charSequence.length();
 
                 if(len == 0 || charSequence.equals(getResources().getString(R.string.app_filter_search_hint))) {
-                    editTextBorder.getLayoutParams().width = 8;
+                    editTextBorder.getLayoutParams().width = 16;
                 } else {
                     Paint paint = new Paint();
                     paint.setTextSize(18);
@@ -175,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements
 
                     float nowWidth = paint.measureText(charSequence.toString());
 
-                    editTextBorder.getLayoutParams().width = Math.max((int) nowWidth, 8);
+                    editTextBorder.getLayoutParams().width = Math.max((int) nowWidth, 16);
                 }
 
                 editTextBorder.requestLayout();
@@ -194,9 +257,15 @@ public class MainActivity extends AppCompatActivity implements
             EditText editText = (EditText) findViewById(R.id.search_edit);
             editText.clearFocus();
 
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if(inputMethodManager != null)
+                inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+
             View mainSearchContainer = findViewById(R.id.main_search_container);
             mainSearchContainer.setVisibility(View.GONE);
             // Your piece of code on keyboard search click
+
+            return true;
         }
 
         return false;
@@ -252,9 +321,12 @@ public class MainActivity extends AppCompatActivity implements
         if(rewrite && textView != null) {
             ActiveFilter activeFilter = activeFilters.get(preferenceType);
 
+            int pad = getResources().getDimensionPixelSize(R.dimen.activity_margin_relative);
+
             activeFilter.textView.setBackgroundResource(0);
             activeFilter.textView = textView;
             activeFilter.textView.setBackgroundResource(R.drawable.border_view);
+            activeFilter.textView.setPadding(pad, pad, pad, pad);
             activeFilter.activeOption = value;
 
             editor.putString(preferenceType, value);
@@ -310,7 +382,10 @@ public class MainActivity extends AppCompatActivity implements
             ActiveFilter activeFilter = activeFilters.get(key);
 
             if(filterOption.equals(activeFilter.activeOption)) {
+                int pad = getResources().getDimensionPixelSize(R.dimen.activity_margin_relative);
+
                 filterTextView.setBackgroundResource(R.drawable.border_view);
+                filterTextView.setPadding(pad, pad, pad, pad);
 
                 activeFilter.textView = filterTextView;
             }

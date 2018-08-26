@@ -49,6 +49,5 @@ public class ItemsContract {
         }
 	}
 
-	private ItemsContract() {
-	}
+	private ItemsContract() {}
 }
