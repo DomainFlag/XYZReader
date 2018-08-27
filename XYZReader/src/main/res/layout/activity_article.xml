@@ -32,12 +32,15 @@
         android:id="@+id/share_fab"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_gravity="bottom|end"
-        android:padding="@dimen/activity_margin_component"
+        android:padding="@dimen/activity_margin_relative"
         android:elevation="6dp"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/activity_margin_component"
+        android:layout_marginRight="@dimen/activity_margin_component"
+        android:layout_marginEnd="@dimen/activity_margin_component"
+        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchorGravity="bottom|right|end"
+        android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/ic_share"
         android:scaleType="center"/>
 
@@ -89,7 +92,7 @@
                     android:src="@drawable/ic_arrow_back" />
 
                 <include
-                    layout="@layout/item_details_layout"
+                    layout="@layout/article_details_big_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"/>

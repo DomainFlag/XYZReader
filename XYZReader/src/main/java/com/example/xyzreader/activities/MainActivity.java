@@ -30,7 +30,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -67,9 +66,9 @@ public class MainActivity extends AppCompatActivity implements
         adapter = new ArticleDetailAdapter(this, null);
         adapter.setHasStableIds(true);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        mRecyclerView = findViewById(R.id.recycler_view);
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(adapter);
 
         snapHelper = new PagerSnapHelper();
@@ -120,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements
                         LinearLayoutManager.VERTICAL,
                         false);
 
+                adapter.changeLayoutViewMode(ArticleDetailAdapter.LAYOUT_VIEW_MULTI);
                 snapHelper.attachToRecyclerView(null);
 
                 mRecyclerView.setLayoutManager(gridLayoutManager);
@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements
                         LinearLayoutManager.VERTICAL,
                         false);
 
+                adapter.changeLayoutViewMode(ArticleDetailAdapter.LAYOUT_VIEW_SINGLE);
                 snapHelper.attachToRecyclerView(mRecyclerView);
 
                 mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -137,6 +138,8 @@ public class MainActivity extends AppCompatActivity implements
             }
             default : Log.v("MainActivity", "Don't do it again");
         }
+
+        mRecyclerView.getRecycledViewPool().clear();
     }
 
     private void refresh() {
@@ -186,20 +189,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mRecyclerView.setAdapter(null);
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView thumbnailView;
-        public TextView titleView;
-        public TextView subtitleView;
-
-        public ViewHolder(View view) {
-            super(view);
-
-            thumbnailView = view.findViewById(R.id.thumbnail);
-            titleView = view.findViewById(R.id.article_title);
-            subtitleView = view.findViewById(R.id.article_subtitle);
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -323,10 +312,14 @@ public class MainActivity extends AppCompatActivity implements
 
             int pad = getResources().getDimensionPixelSize(R.dimen.activity_margin_relative);
 
-            activeFilter.textView.setBackgroundResource(0);
+            if(activeFilter.textView != null) {
+                activeFilter.textView.setBackgroundResource(0);
+            }
+
             activeFilter.textView = textView;
             activeFilter.textView.setBackgroundResource(R.drawable.border_view);
             activeFilter.textView.setPadding(pad, pad, pad, pad);
+
             activeFilter.activeOption = value;
 
             editor.putString(preferenceType, value);
