@@ -13,6 +13,7 @@
     </string-array>
 
     <string-array name="filter_option_genres_array">
+        <item>@string/app_filter_option_all</item>
         <item>@string/app_filter_option_genre_fiction</item>
         <item>@string/app_filter_option_genre_novel</item>
         <item>@string/app_filter_option_genre_romance</item>

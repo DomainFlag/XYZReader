@@ -39,7 +39,7 @@ public class ArticleDetailAdapter extends RecyclerView.Adapter<ArticleDetailAdap
 
     private Context mContext;
     private Cursor mCursor;
-    private int mLayoutViewMode;
+    private int mLayoutViewMode = LAYOUT_VIEW_SINGLE;
 
     public ArticleDetailAdapter(Context context, Cursor cursor) {
         mContext = context;
@@ -115,6 +115,10 @@ public class ArticleDetailAdapter extends RecyclerView.Adapter<ArticleDetailAdap
 
     public void changeLayoutViewMode(int layoutViewMode) {
         mLayoutViewMode = layoutViewMode;
+    }
+
+    public int getLayoutViewMode() {
+        return mLayoutViewMode;
     }
 
     private void onClickArticle(int position) {

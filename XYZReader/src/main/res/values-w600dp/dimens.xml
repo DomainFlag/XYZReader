@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="activity_edit_text_size">@dimen/activity_text_subheader</dimen>
+
+</resources>

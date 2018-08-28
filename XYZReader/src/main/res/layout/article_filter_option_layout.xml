@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/activity_margin_sibling"
     android:padding="@dimen/activity_margin_relative"
     android:textStyle="bold"
-    app:fontFamily="monospace"
     android:textColor="@color/colorIcons"
+    android:textSize="@dimen/activity_text_subparagraph"
+    app:fontFamily="monospace"
     tools:text="@string/app_filter_option"/>

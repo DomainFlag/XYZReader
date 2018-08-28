@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="grid_layout_col">3</integer>
+    <dimen name="activity_image_view_dimen">200dp</dimen>
+
+</resources>

@@ -1,5 +1,6 @@
 <resources>
-    <declare-styleable name="DrawInsetsFrameLayout">
-        <attr name="insetBackground" format="color|reference" />
-    </declare-styleable>
+
+    <integer name="grid_layout_col">2</integer>
+    <dimen name="activity_image_view_dimen">175dp</dimen>
+
 </resources>

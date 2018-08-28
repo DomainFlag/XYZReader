@@ -80,6 +80,7 @@
                     android:scaleType="centerCrop"
                     android:adjustViewBounds="true"
                     android:background="@color/colorSecondaryText"
+                    android:contentDescription="@string/app_article_thumbnail_description"
                     tools:src="@drawable/photo_background_protection"/>
 
                 <ImageButton

@@ -14,6 +14,8 @@
 
 
     <string name="app_search_text">Search</string>
+
+    <string name="app_filter_by">Filter by</string>
     <string name="app_filter_option">Filter Option</string>
 
     <string name="app_filter_option_writer">Writer</string>
@@ -23,6 +25,8 @@
     <string name="app_filter_option_rating">Rating</string>
     <string name="app_filter_option_genre">Genre</string>
 
+    <string name="app_filter_option_all">All</string>
+
     <string name="app_filter_option_genre_novel">Novel</string>
     <string name="app_filter_option_genre_sci_fi">Sci-fi</string>
     <string name="app_filter_option_genre_romance">Romance</string>
@@ -31,6 +35,8 @@
     <string name="app_filter_by_key">filter_by_key</string>
     <string name="app_filter_on_key">filter_on_key</string>
 
+    <string name="app_multi_window">Multi Window</string>
+    <string name="app_single_window">Single Window</string>
 
     <string name="app_filter_search_hint">Search Book, Writer, Anything\.\.\.</string>
     <string name="app_filter_search_result">Search result</string>
