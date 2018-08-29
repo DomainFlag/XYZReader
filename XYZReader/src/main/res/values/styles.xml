@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="Theme.Bacon" parent="@style/Theme.AppCompat.DayNight.NoActionBar">
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>

@@ -70,13 +70,18 @@ public class ArticleActivity extends AppCompatActivity
             }
         });
 
+        appBarLayout.setElevation(getResources().getDimension(R.dimen.activity_app_bar));
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if(Math.abs(verticalOffset) == appBarLayout.getTotalScrollRange()) {
                     toolbarStateCollapsed = true;
+                    appBarLayout.setElevation(0);
                 } else if(verticalOffset == 0) {
                     toolbarStateCollapsed = false;
+                    appBarLayout.setElevation(0);
+                } else {
+                    appBarLayout.setElevation(getResources().getDimension(R.dimen.activity_app_bar));
                 }
             }
         });

@@ -14,4 +14,7 @@
 
     <dimen name="activity_edit_text_size">@dimen/activity_text_paragraph</dimen>
 
+    <dimen name="activity_floating_action_button">6dp</dimen>
+    <dimen name="activity_app_bar">4dp</dimen>
+
 </resources>
